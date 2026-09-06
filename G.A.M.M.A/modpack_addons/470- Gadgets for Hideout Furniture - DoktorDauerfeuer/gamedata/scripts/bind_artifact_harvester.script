@@ -437,7 +437,7 @@ local function sync_display_for_active(case_id, d)
         return
     end
 
-    spawn_display(case_id, active_id, active_sec)
+    --spawn_display(case_id, active_id, active_sec)
 end
 
 local function get_time_elapsed()
@@ -827,7 +827,7 @@ local function on_item_after_move(case_id, item, mode, bag_from)
                     artifact_condition = cond or 1.0,
                     progress_sec = 0,
                 })
-                spawn_display(harvester_id, item_id, item_sec)
+                --spawn_display(harvester_id, item_id, item_sec)
                 refresh_wrapper_sound(harvester_id)
             else
                 harv_dbg("after_move insert ignored: active already set to %s", tostring(get_active_id(d)))
