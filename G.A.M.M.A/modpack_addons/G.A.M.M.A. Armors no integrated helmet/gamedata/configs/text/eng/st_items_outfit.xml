@@ -1101,7 +1101,7 @@
 		<text>PS5-9Md light Pathfinder</text>
 	</string>
 	<string id="dolg_scientific_wood_outfit_description">
-		<text>%c[ui_gray_1]As a token of goodwill (and to help cover their research costs), Clear Sky occasionally makes coveted "Pathfinder" suits on commission for use among the Duty faction. Altered according to Duty's needs, this suit has a few differences compared to the CS-4a pathfinder. Namely, its weight has been reduced by almost half at the expense of some of its protection. Despite this, it's an excellent and comfortable outfit for Duty's more curious members.\n \n
+		<text>%%c[ui_gray_1]An armor design stolen from Clear Sky based on the "Pathfinder" suits. Altered according to Duty's needs, this suit has a few differences compared to the CS-4a pathfinder. Namely, its weight has been reduced by almost half at the expense of some of its protection. Despite this, it's an excellent and comfortable outfit for Duty's more curious members.\n \n
 		</text>
 	</string>
 	
