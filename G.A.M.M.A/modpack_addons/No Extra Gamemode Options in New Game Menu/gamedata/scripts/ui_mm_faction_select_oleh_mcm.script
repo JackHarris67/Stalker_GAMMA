@@ -1,0 +1,56 @@
+-- removes unsupported options in the "New Game" menu
+-- oleh5230, 19.08.26
+-- credits: Jabbers
+
+local _Main_Controls = ui_mm_faction_select.UINewGame.Main_Controls
+
+function ui_mm_faction_select.UINewGame.Main_Controls(self, rand)
+    _Main_Controls(self, rand)
+
+    local function move(ctrl, deltaX, deltaY)
+        local pos = ctrl:GetWndPos()
+        ctrl:SetWndPos(vector2():set( pos.x + deltaX ,pos.y + deltaY ))
+    end
+
+	move(self.ck_azazel_mode_cap, 9999, 0)
+	move(self.ck_azazel_mode, 9999, 0)
+	move(self.ck_survival_cap, 9999, 0)
+	move(self.ck_survival, 9999, 0)
+	move(self.ck_warfare, 9999, 0)
+	move(self.ck_warfare_cap, 9999, 0)
+	move(self.ck_campfire, 9999, 0)
+	move(self.ck_campfire_cap, 9999, 0)
+
+	move(self.ck_story, 0, 10)
+	move(self.ck_story_cap, 0, 10)
+	move(self.ck_routes, 0, -50)
+	move(self.ck_routes_cap, 0, -50)
+	move(self.ck_hardcore, 0, -20)
+	move(self.ck_hardcore_cap, 0, -20)
+	move(self.list_hardcore_lives, 0, -20)
+	move(self.list_hardcore_lives_cap, 0, -20)
+	move(self.list_hardcore_regen, 0, -20)
+	move(self.list_hardcore_regen_cap, 0, -20)
+	move(self.ck_conditions, 0, -50)
+	move(self.ck_conditions_cap, 0, -50)
+	move(self.list_timer, 0, -50)
+	move(self.list_timer_cap, 0, -50)
+
+	-- extra offset to fit Soulslike button
+	if souslike_gamemode_injector_mcm then
+		move(self.ck_soulslike_mode_cap, 0, 5)
+		move(self.ck_soulslike_mode, 0, 5)
+
+		if efp_utils_mcm then
+			move(self.ck_azazel_mode_cap, 0, 10)
+			move(self.ck_azazel_mode, 0, 10)
+		else
+			move(self.ck_story_cap, 0, 10)
+			move(self.ck_story, 0, 10)
+			move(self.ck_azazel_mode_cap, 0, 15)
+			move(self.ck_azazel_mode, 0, 15)
+			move(self.ck_survival_cap, 0, 20)
+			move(self.ck_survival, 0, 20)
+		end
+	end
+end

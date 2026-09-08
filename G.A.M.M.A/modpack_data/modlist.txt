@@ -555,6 +555,7 @@
 -380- Anomaly Subtitles - AntGlobes
 +452- Interaction Dot Marks - Catspaw
 +215- Good addons with issues and bugs_separator
++No Extra Gamemode Options in New Game Menu
 +No Weapon Jam Chance at Full Condition
 -Suppressors do not Increase Jam Probability
 -No Tinnitus Sound Effects
