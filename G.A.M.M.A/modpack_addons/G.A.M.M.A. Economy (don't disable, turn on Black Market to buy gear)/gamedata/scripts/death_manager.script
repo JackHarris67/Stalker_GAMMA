@@ -566,28 +566,11 @@ function try_spawn_ammo(npc)
 			end
 			
 			-- spawn grenade ammo if there is launcher attached
-			
-			if (ini_sys:r_float_ex(itm:section(),"grenade_launcher_status") > 0) then
-				ammo_class = parse_list(ini_sys,itm:section(),"grenade_class")
-				for i=1,#ammo_class do
-					sec = ammo_class[i]
-					if (sec) then
-						if (item_count[sec]) then
-							number = math.random(item_count[sec][1], item_count[sec][2])
-						else 
-							number = math.random(0,2)
-						end
-						if (number > 0 and ini_sys:section_exist(sec)) then 
-							-- DPH_LOOT_COND
-							if ui_mcm.get('dph_loot_cond/ammo/disable_bad') and sec:find('%_bad$') then
-								sec = sec:sub(1, -5)
-							end
-							chance = math.random(0,100)
-							if chance > 30 then
-								alife_create_item(sec, npc, {ammo = number * ui_mcm.get('dph_loot_cond/ammo/factor')})
-							end
-							-- DPH_LOOT_COND
-						end
+			if (ini_sys:r_float_ex(itm:section(),"grenade_launcher_status") > 0) and itm:weapon_is_grenadelauncher() then
+				local grenade_class = parse_list(ini_sys,itm:section(),"grenade_class")
+				if grenade_class and grenade_class[1] then
+					for i=1,math.random(3) do
+						alife_create_item(grenade_class[1], npc)
 					end
 				end
 			end
@@ -708,7 +691,30 @@ function try_spawn_sin_artefacts(npc)
 	end
 end
 
+-- Postpone on next n tick
+local nextTick = _G.nextTick or function(f, n)
+	n = floor(max(n or 1, 1))
+	AddUniqueCall(function()
+		if n == 1 then
+			return f()
+		else
+			n = n - 1
+			return false
+		end
+	end)
+end
+
 function set_weapon_drop_condition(npc,itm)
+	local id = itm:id()
+	local verify = function()
+		local obj = get_object_by_id(id)
+		if npc and obj and obj:parent() == nil then
+			printf("death_manager.set_weapon_drop_condition: NPC dropped weapon on death, attempting transfer")
+			npc:transfer_item(obj, npc)
+		end
+		return true
+	end
+	nextTick(verify)
 
 	local rank = ranks.get_obj_rank_name(npc)
 	local condition = 10
@@ -763,23 +769,6 @@ function set_weapon_drop_condition(npc,itm)
 				end
 			end
 		end
-		-- spawn grenade ammo if there is launcher attached
-		if (ini_sys:r_float_ex(itm:section(),"grenade_launcher_status") > 0) then
-			ammo_class = parse_list(ini_sys,itm:section(),"grenade_class")
-			for i=1,#ammo_class do
-				sec = ammo_class[i]
-				if (sec and item_count[sec]) then 
-					number = math.random(item_count[sec][1], item_count[sec][2])
-					if (number > 0 and ini_sys:section_exist(sec)) then 
-						chance = math.random(0,100)
-						if chance > 10 then
-							alife_create_item(sec, npc, {ammo = number})
-						end
-					end
-				end
-			end
-		end
-		--
 		
 		local ammo = itm:get_ammo_in_magazine()
 		itm:set_ammo_elapsed(0)
