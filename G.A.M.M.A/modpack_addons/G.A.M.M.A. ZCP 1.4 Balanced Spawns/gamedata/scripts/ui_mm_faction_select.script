@@ -10,6 +10,12 @@
 	+ Support for new factions
 --]]
 
+--[[
+oleh5230, 18.08.26, Randomize option edits:
+- disabled difficulty option randomization
+- loadout selection spends all points
+- removed possibility of selection of multiple pieces of gear of same class
+--]]
 
 ----------------------------------------------------------------------
 -- Controls
@@ -1237,7 +1243,36 @@ function UINewGame:LoadLoadout (rand)
 		return
 	end
 	
-	while true do
+	local failed_attempts = 0
+	local unselected_classes = {
+		["pistol"] = true,
+		["primary"] = true,
+		["outfit"] = true,
+		["headgear"] = true,
+	}
+	local equ_classes = {
+		["WP_PM"] = "pistol",
+		["WP_WALTHER"] = "secondary",
+		["WP_USP45"] = "secondary",
+		["WP_HPSA"] = "secondary",
+		["WP_VINTOREZ"] = "secondary",
+		["WP_AK74"] = "primary",
+		["WP_LR300"] = "secondary", -- used for automatic pistols
+		["WP_SHOTGUN"] = "primary",
+		["WP_ASHTG"] = "primary",
+		["WP_BM16"] = "primary",
+		["WP_SVD"] = "primary",
+		["WP_SVU"] = "primary",
+		["WP_RG6"] = "primary",
+		["WP_RPG7"] = "primary",
+		["WP_VAL"] = "primary",
+		["WP_GROZA"] = "primary",
+	
+		["EQU_STLK"] = "outfit",
+		["E_STLK"] = "outfit",
+		["E_HLMET"] = "headgear",
+	}
+	while self.points_left > 4 and failed_attempts < 100 do
 		local idx = is_not_empty(self.CC["loadout"].cell) and random_key_table( self.CC["loadout"].cell )
 		if (not idx) then
 			return
@@ -1245,19 +1280,36 @@ function UINewGame:LoadLoadout (rand)
 		
 		local ci = self.CC["loadout"].cell[idx]
 		if not (ci and ci.section) then
-			break
-		end
+			failed_attempts = failed_attempts + 1
+		else
 		
-		local points = ci.flags.value
-		printf("sec: %s | points: %s | points left: %s", ci.section, points, self.points_left)
-		if (points > self.points_left) then
-			break
+			local points = ci.flags.value
+			local class = SYS_GetParam(0, ci.section, "class") or ""
+			printf("sec: %s | class: %s | points: %s | points left: %s | failed_attempts: %s", ci.section, class, points, self.points_left, failed_attempts)
+			if (points > self.points_left) then
+				failed_attempts = failed_attempts + 1
+			else
+				
+				class = equ_classes[class]
+				if class then
+					if unselected_classes[class] then
+					
+						self.points_used = self.points_used + points
+						self.points_left = self.points_left - points
+					
+						self.CC["loadout"]:TransferItem(self.CC["inventory"], nil, ci.section)
+						unselected_classes[class] = false
+					else
+						failed_attempts = failed_attempts + 1
+					end
+				else
+					self.points_used = self.points_used + points
+					self.points_left = self.points_left - points
+				
+					self.CC["loadout"]:TransferItem(self.CC["inventory"], nil, ci.section)
+				end
+			end
 		end
-		
-		self.points_used = self.points_used + points
-		self.points_left = self.points_left - points
-	
-		self.CC["loadout"]:TransferItem(self.CC["inventory"], nil, ci.section)
 	end
 	
 	self.text_points_used:SetText(tostring(self.points_used))
@@ -1589,8 +1641,8 @@ function UINewGame:OnRandomize()
 	self.character_name:SetText(first_name .. " " .. last_name)
 	
 	-- Difficulty and Economy
-	self:LoadDifficulty(true)
-	self:LoadEconomy(true)
+	-- self:LoadDifficulty(true)
+	-- self:LoadEconomy(true)
 	
 	-- Everything else
 	self:UpdateAll(true, self.selected_faction)
