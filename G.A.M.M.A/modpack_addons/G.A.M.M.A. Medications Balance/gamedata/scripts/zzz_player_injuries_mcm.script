@@ -1,6 +1,7 @@
 -- If you don't use MCM, change your defaults from here.
 local defaults = {
 	["hud_toggle_key_bind"] = DIK_keys.DIK_H,
+	["fps_ui_update_lock"] = true,
 	["TEXT_BASED_PATCH"] = false,
 	["NEW_LIMB_PENALTIES_FEATURE"] = true,
 	["new_voice_sounds"] = true,
@@ -22,6 +23,7 @@ function on_mcm_load()
 	op = { id= "body_health_system",sh=true ,gr={
 			{ id= "title",type= "slide",link= "ui_options_slider_player",text="ui_mcm_body_health_system_title",size= {512,50},spacing= 20 },
 			{id = "hud_toggle_key_bind", type = "key_bind", val = 2, def = DIK_keys.DIK_H},
+			{id = "fps_ui_update_lock", type = "check", val = 1, def = true},
 			{id = "TEXT_BASED_PATCH", type = "check", val = 1, def = false},
 			{id = "NEW_LIMB_PENALTIES_FEATURE", type = "check", val = 1, def = true},
 			{id = "new_voice_sounds", type = "check", val = 1, def = true},
