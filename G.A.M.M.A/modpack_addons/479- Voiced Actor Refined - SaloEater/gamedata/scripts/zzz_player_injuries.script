@@ -59,7 +59,7 @@ function actor_on_first_update()
 end
 ------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------
-
+local bhs_update_timer = 0
 local last_damaged_hitbox=nil
 local showtexthud=(zzz_player_injuries_mcm.get_config("TEXT_BASED_PATCH")) and 2 or 0 --1 large left down, 2 default center 0 texture
 local show_hud_type=2
@@ -1586,8 +1586,16 @@ function actor_on_update()
 			legs_limp()
 		end
 		----------------------------
-		HUDUpdate()
 		PartialDamage()
+
+		local tg = time_global()
+		local use_throttle = zzz_player_injuries_mcm.get_config("fps_ui_update_lock")
+		if use_throttle and (tg - bhs_update_timer < 20) then
+			return
+		end
+		bhs_update_timer = tg
+		----------------------------
+		HUDUpdate()
 end
 
 local function actor_on_before_death()
