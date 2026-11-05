@@ -174,7 +174,7 @@ function actor_on_update(b,d)
 	
 	local curr_time = game.get_game_time()
 	
-	if last_drink > start_blur_2 then
+	if last_drink > start_blur_3 then
 		local tg = time_global()
 		if (pwr_chk == nil or tg > pwr_chk) then 
 			if (db.actor.power > 0) then
